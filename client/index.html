@@ -2,9 +2,38 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/client/src/assets/icons/icons8-moss-color-32.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>client</title>
+    <meta name="description" content="Preserved Nordic moss, arranged by hand in small batches. No watering, no light, no upkeep." />
+    <!--
+      REMOVE THIS TAG WHEN THE SHOP IS REAL.
+
+      MossArt is not trading yet. Every product name, photograph and line of
+      provenance copy on this site is a stand-in, and it is deployed as a
+      portfolio piece rather than as a shop. Letting it be indexed now would put
+      a fake storefront into search results under a brand that has not launched,
+      and those pages would still be sitting there, stale and outranking the real
+      ones, on the day it does.
+
+      noindex rather than a robots.txt Disallow: a disallow stops the crawl, so
+      this tag never gets read, and a URL linked from anywhere else can still be
+      listed without a description. See public/robots.txt.
+    -->
+    <meta name="robots" content="noindex, nofollow" />
+    <title>MossArt — preserved moss, made by hand</title>
+    <script>
+      // Runs before first paint so the correct theme is applied with no flash.
+      (function () {
+        try {
+          var stored = JSON.parse(localStorage.getItem('theme'));
+          var theme = stored || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

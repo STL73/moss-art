@@ -10,35 +10,29 @@ const authorise = async (req, res, next) => {
         if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
             token = req.headers.authorization.split(' ')[1];
         }
-        if (!token) 
-            return res.status(401).json({
-                success: false,
-                message: 'Unauthorized',
-                error: 'No token provided'
-            });
-        
+
+        if (!token) {
+            const error = new Error('No token provided');
+            error.statusCode = 401;
+            throw error;
+        }
 
         const decoded = jwt.verify(token, JWT_SECRET);
 
         const user = await User.findById(decoded.userId);
 
-        if (!user) 
-            return res.status(401).json({
-                success: false,
-                message: 'Unauthorized',
-                error: 'User not found'
-            });
-        
+        if (!user) {
+            const error = new Error('User not found');
+            error.statusCode = 401;
+            throw error;
+        }
 
         req.user = user;
         next();
 
     } catch (error) {
-        res.status(401).json({
-            success: false,
-            message: 'Unauthorized',
-            error: error.message
-        });
+        error.statusCode = error.statusCode || 401;
+        next(error);
     }
 }
 

@@ -1,0 +1,13 @@
+# Crawling is allowed on purpose, even though this site should not appear in
+# search results yet. Keeping it out of the index is the job of the
+# <meta name="robots" content="noindex"> tag in index.html, and a crawler has
+# to be allowed to fetch the page to read that tag.
+#
+# Disallow: / would be the intuitive move and the wrong one: it stops the fetch,
+# so the noindex is never seen, and a URL linked from anywhere else can still be
+# listed — as a bare result with no description. Allow plus noindex is what
+# actually keeps it out.
+#
+# Remove the noindex tag when the shop is real. This file needs no change.
+User-agent: *
+Allow: /

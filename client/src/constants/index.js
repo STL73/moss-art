@@ -1,138 +1,86 @@
-import { FaFacebookF, FaXTwitter, FaInstagram, FaTiktok, FaTruckFast } from "react-icons/fa6";
-import { IoShieldCheckmark } from "react-icons/io5";
-import { MdOutlineContactSupport } from "react-icons/md";
-import { thumbnailProduct1, bigProduct1, thumbnailProduct2, bigProduct2, thumbnailProduct3, bigProduct3, product1, product2, product3, product4, mossHero, moss2, moss3, customer1, customer2 } from "../assets/images";
+import { FaFacebookF, FaXTwitter, FaInstagram, FaTiktok } from 'react-icons/fa6';
+
+// Single source for the details shown in the footer and on the contact page,
+// so the two can never drift apart.
+//
+// Both are placeholders and must stay that way until the business is real. This
+// held Slav's actual mobile number until 2026-08-16, which would have gone onto
+// a public URL attached to a shop that does not trade — footer numbers are among
+// the first things scrapers harvest, and the calls would have been his to field
+// for as long as the page existed.
+//
+// 07700 900000-900999 is the range Ofcom reserves for drama and fiction. It is
+// guaranteed never to be allocated, so it reads as a real number in a screenshot
+// and can never reach anybody. Replace both with the real details on the day the
+// shop opens, not before.
+export const contactEmail = 'customer@mossart.com';
+export const contactPhone = '+44 7700 900142';
+export const contactTel = `tel:${contactPhone.replace(/\s/g, '')}`;
+
+// Every entry must resolve to something that exists. A "Journal" link used to
+// sit here pointing at /#story, an anchor no section ever rendered.
 export const navLinks = [
-    { href: "#home", label: "Home" },
-    { href: "#about-us", label: "About Us" },
-    { href: "#products", label: "Products" },
-    { href: "#contact-us", label: "Contact Us" },
+    { to: '/products', label: 'Shop' },
+    { to: '/#about', label: 'About' },
+    { to: '/contact', label: 'Contact' },
 ];
 
-export const statistics = [
-    { value: '10+', label: 'Moss Brands' },
-    { value: '200+', label: 'Products' },
-    { value: '3k+', label: 'Customers' },
-];
-
-export const thumbnails = [
-    {
-        thumbnail: thumbnailProduct1,
-        bigProduct: bigProduct1,
-    },
-    {
-        thumbnail: thumbnailProduct2,
-        bigProduct: bigProduct2,
-    },
-    {
-        thumbnail: thumbnailProduct3,
-        bigProduct: bigProduct3,
-    },
-];
-
-export const products = [
-    {
-        imgURL: product1,
-        name: "Moss and Flowers Decoration in Open Pot",
-        price: "£28.99",
-    },
-    {
-        imgURL: product2,
-        name: "Moss Decoration in Glass Bowl",
-        price: "£25.99",
-    },
-    {
-        imgURL: product3,
-        name: "Moss and Bird Decoration",
-        price: "£13.99",
-    },
-    {
-        imgURL: product4,
-        name: "Moss and Stones Decoration in Plater",
-        price: "£16.99",
-    },
-];
-
-export const services = [
-    {
-        imgURL: FaTruckFast,
-        label: "Free shipping",
-        subtext: "Enjoy seamless shopping with our complimentary shipping service."
-    },
-    {
-        imgURL: IoShieldCheckmark,
-        label: "Secure Payment",
-        subtext: "Experience worry-free transactions with our secure payment options."
-    },
-    {
-        imgURL: MdOutlineContactSupport,
-        label: "Love to help you",
-        subtext: "Our dedicated team is here to assist you every step of the way."
-    },
-];
-
-export const offer = [
-    { 
-        src: mossHero, 
-        alt: "moss beauty" 
-    },
-    {
-        src: moss2,
-        alt: "moss beauty"
-    },
-    {
-        src: moss3,
-        alt: "moss beauty"
-    }
-]
-
-export const reviews = [
-    {
-        imgURL: customer1,
-        customerName: 'Slav Lambov',
-        rating: 4.5,
-        feedback: "The attention to detail and the quality of the product exceeded my expectations. Highly recommended!"
-    },
-    {
-        imgURL: customer2,
-        customerName: 'Rositsa Milusheva',
-        rating: 4.5,
-        feedback: "The product not only met but exceeded my expectations. I'll definitely be a returning customer!"
-    }
+// Replaced the invented figures on 2026-08-16 — 12 Species / 200+ Pieces /
+// 3k Customers were never confirmed with the client, and "3k Customers" is a
+// commercial claim about the business rather than a design detail. Nothing
+// here needs the client's sign-off: these are properties of preserved moss,
+// which is what the product is.
+//
+// The care list was removed from the hero paragraph and the footer at the same
+// time. It used to appear in both, so putting it in this band as well would
+// have said the same thing three times on one page. If you add it back to
+// either, take it out of here.
+export const HERO_CLAIMS = [
+    { value: 'No', label: 'water', suffix: 'Preserved, not living' },
+    { value: 'No', label: 'light', suffix: 'Happy in a dark hallway' },
+    { value: 'No', label: 'upkeep', suffix: 'Nothing to do, for years' },
 ];
 
 export const footerLinks = [
     {
-        title: "Products",
+        title: 'Collections',
         links: [
-            { name: "Moss and Flowers Decoration in Open Pot", link: "/" },
-            { name: "Moss Decoration in Glass Bowl", link: "/" },
-            { name: "Moss and Bird Decoration", link: "/" },
-            { name: "Moss and Stones Decoration in Plater", link: "/" },
+            // Every entry has to match a category that has products in it. This
+            // linked to Wreaths until 2026-08-16, which was fine while a wreath
+            // existed and became a link to an empty grid the moment it did not.
+            // Wreaths came back on 2026-08-17 with three products behind it,
+            // along with Letters & Signs. Keep this list in step with
+            // `categories` in data/products.js — api.test.js guards the data
+            // side, but nothing checks that a footer link points somewhere real.
+            { name: 'Moss Pots', to: '/products?category=moss-pots' },
+            { name: 'Wall Art', to: '/products?category=wall-art' },
+            { name: 'Planters', to: '/products?category=planters' },
+            { name: 'Tabletop', to: '/products?category=tabletop' },
+            { name: 'Wreaths', to: '/products?category=wreaths' },
+            { name: 'Letters & Signs', to: '/products?category=letters-signs' },
         ],
     },
     {
-        title: "Help",
+        title: 'Help',
         links: [
-            { name: "About us", link: "/" },
-            { name: "FAQs", link: "/" },
-            { name: "How it works", link: "/" },
-            { name: "Privacy policy", link: "/" },
-            { name: "Payment policy", link: "/" },
+            { name: 'About us', to: '/#about' },
+            { name: 'FAQs', to: '/contact#faq' },
+            { name: 'Delivery', to: '/contact#delivery' },
+            { name: 'Returns', to: '/contact#returns' },
         ],
     },
     {
-        title: "Get in touch",
+        title: 'Get in touch',
         links: [
-            { name: "customer@mossart.com", link: "mailto:customer@mossart.com" },
-            { name: "+447700900142", link: "tel:+447700900142" },
+            { name: contactEmail, to: `mailto:${contactEmail}` },
+            { name: contactPhone, to: contactTel },
         ],
     },
 ];
 
 export const socialMedia = [
-    { src: FaFacebookF, alt: "facebook logo" },
-    { src: FaXTwitter, alt: "twitter logo" },
-    { src: FaInstagram, alt: "instagram logo" },
-    {src: FaTiktok, alt: "tiktok logo" },
+    { Icon: FaFacebookF, label: 'Facebook', href: 'https://facebook.com' },
+    { Icon: FaXTwitter, label: 'X', href: 'https://x.com' },
+    { Icon: FaInstagram, label: 'Instagram', href: 'https://instagram.com' },
+    { Icon: FaTiktok, label: 'TikTok', href: 'https://tiktok.com' },
 ];

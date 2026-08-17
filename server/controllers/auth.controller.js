@@ -43,9 +43,7 @@ export const signUp = async (req, res, next) => {
             message: 'User created successfully',
             data: {
                 token,
-                user: {
-                    id: newUsers[0],
-                }
+                user: newUsers[0]
             }
         });
     } catch (error) {

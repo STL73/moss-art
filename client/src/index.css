@@ -1,45 +1,197 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Palanquin:wght@100;200;300;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Palanquin:wght@100;200;300;400;500;600;700&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
+/* Both families carry an ital axis because <em> is the brand's accent device and
+   appears in both — Fraunces in headings, Inter in the product species lines.
+   Without it the browser synthesises a slant, which is visibly wrong on a serif.
+   Inter is requested at 400/500/600 only; 300 and 700 are never used. */
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap");
 @import "tailwindcss";
 
+/* Runtime-swappable palette. @theme inline below points Tailwind's colour
+   utilities at these variables, so changing data-theme restyles everything
+   without any component knowing a theme exists.
 
+   This is Nordic, chosen 2026-08-17 over the sage-green scheme it replaces and
+   over three other candidates. It is measured rather than designed: the
+   dominant colours of ceramicBowl.jpg were pulled out of the file itself, where
+   a near-neutral sage-grey wall at #a7aca5 fills 38% of the frame and the
+   ice-blue moss reads #c2d3da at 82% lightness and only 11% saturation. The
+   dark accent below is that moss. The light ground is the same blue pushed to
+   16% saturation.
 
-@theme {
-  --color-slate-gray: #6b7280;
-  --color-pale-green: #d9f2de;
-  --color-light-green: #4caf50;
-  --color-dark-green: #256d34;
-  --color-moss-green: #3a8d46;
-  --color-bg-color: #65b372;
-  --color-text-accent: #2f2776;
-  --color-primary-green: #137957;
-  --color-bg-green: #b2edbc;
-  --font-playfair: "Playfair", serif;
-  --font-poppins: "Poppins", sans-serif;
-  --font-montserrat: "Montserrat", sans-serif;
-  --font-palanquin: "Palanquin", sans-serif;
-  --font-size-sm: [14px, 20px];
-  --font-size-base: [16px, 19.5px];
-  --font-size-xs: [12px, 16px];
-  --font-size-lg: [18px, 21.94px];
-  --font-size-xl: [20px, 24.38px];
-  --font-size-2xl: [24px, 29.26px];
-  --font-size-3xl: [28px, 50px];
-  --font-size-4xl: [48px, 58px];
-  --font-size-8xl: [96px, 106px];
-  --screen-wide: 1440px;
-  --background-image-hero: url("/src/assets/images/mossCloseup.jpg");
-  --shadow-3xl: 0 10px 40px rgba(0, 0, 0, 0.1);
-}
+   The old sage scheme's weakness was that it agreed with the photography — sage
+   walls behind sage moss flatten each other. Both grounds here are chosen to
+   sit against the pictures rather than with them. */
 @layer base {
+  :root {
+    /* Tells the browser to render native UI — the sort <select> popup, scrollbars,
+       form controls — in dark chrome. Without it a near-white option list renders
+       on a white popup background. */
+    color-scheme: dark;
+
+    --bg: #10141a;
+    --surface: #171d25;
+    --raised: #1f2731;
+    /* Decorative only — dividers, panel edges, card frames. Deliberately quiet,
+       and exempt from the 3:1 rule because it never identifies a control. */
+    --border: #2a333e;
+    /* The boundary of anything you can click. WCAG 1.4.11 wants 3:1 against
+       whatever it sits on; this clears it against bg, surface and raised. */
+    --border-interactive: #6f8288;
+    /* Photography treatment. A scrim over a dark photo on a dark page muddies
+       both, so the image is lifted rather than the scrim thinned — thinning it
+       would cost text contrast. */
+    --photo-filter: brightness(1.18) saturate(1.06);
+    --photo-scrim-hold: 96%;   /* opacity where text sits */
+    --photo-scrim-mid: 78%;    /* midpoint of the falloff */
+    --photo-scrim-far: 22%;    /* opacity at the far edge */
+    /* Two accents, not one variant of the same. --accent is the readable brand
+       colour: it is rendered as TEXT on hover in the footer, cart, contact page
+       and product cards, so it is capped by having to clear 4.5:1 against the
+       ground. --accent-strong is the loud one, and is what every border hovers
+       to. They were a single token until 2026-08-17, and satisfying both jobs
+       at once collapsed the chip hover to 1.01:1 in light — a hover you could
+       not see. Split, it moves by 2.35x here and 2.16x in light. */
+    --accent: #7da8b7;
+    --accent-strong: #a8ccd8;
+    --stone: #566268;
+    /* The resting fill of a control that sits on a card — currently the Add
+       button on a product card, whose transparent background made it invisible
+       against --surface in both themes (1.13:1 dark, 1.04:1 light on hover).
+       Derived rather than hand-picked, and declared once rather than per theme:
+       both --surface and --accent are redefined on the same element that
+       carries data-theme, so this mix resolves to a lift in dark and a deepening
+       in light on its own. 18% was chosen by eye against the real cards.
+       It is NOT required to clear 3:1 against the card — the --accent border
+       identifies the control at 6.58:1 dark and 5.72:1 light, which is what
+       WCAG 1.4.11 asks for. Its only hard limit is keeping --text legible on
+       top of it: it resolves to #27333c here and #c7d3d7 in light, carrying
+       text at 10.85:1 and 12.24:1. */
+    --control: color-mix(in oklab, var(--surface), var(--accent) 18%);
+    --text: #e7ecee;
+    --text-muted: #94a2a7;
+    --on-accent: #10141a;
+  }
+
+  [data-theme="light"] {
+    color-scheme: light;
+
+    /* The ground is the ice blue itself, not a tint of it, and the cards go
+       fully neutral — they read as grey precisely because they sit on something
+       blue. Two light colours can only differ in brightness by a hair before
+       one stops being light (these are 1.16:1 apart, which is nothing), so the
+       separation is entirely hue. The eye does that far more readily than it
+       tells two near-identical greys apart.
+
+       It sits well below the near-white the web defaults to. A full-screen
+       near-white is a lot of emitted light and the most tiring thing an
+       interface can do; contrast barely suffers, because it is carried by how
+       dark the text is. */
+    --bg: #c4dce8;
+    --surface: #eceded;
+    --raised: #f4f5f5;
+    --border: #a9c3d1;
+    --border-interactive: #5d6a6a;
+    /* A near-white scrim washes a photo to milk long before it reaches the
+       opacity text needs. So: hold full opacity only where text actually sits,
+       fall away fast, and push contrast and saturation back into the image to
+       stop the exposed part reading as pale. */
+    --photo-filter: contrast(1.1) saturate(1.14) brightness(0.94);
+    --photo-scrim-hold: 97%;
+    --photo-scrim-mid: 62%;
+    --photo-scrim-far: 4%;
+    --accent: #1d6475;
+    --accent-strong: #0f3b45;
+    --stone: #75837f;
+    --text: #0e1313;
+    --text-muted: #3f4948;
+    --on-accent: #ffffff;
+  }
+
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    scroll-behavior: smooth;
   }
+
+  /* No global scroll-behavior. It applied to programmatic scrolling too, so
+     every route change animated the full page height — leaving the bottom of
+     /products for /contact was a visible one-second scroll. ScrollToHash now
+     picks the behaviour per navigation: instant for a route reset, smooth only
+     when moving to an in-page anchor. */
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    /* Dark theme only. Antialiased smoothing renders glyphs thinner than the
+       default, which is what you want for light text on a dark ground — it
+       cancels the optical bloom that makes pale-on-dark look bolder than it is.
+       Applied to dark text on a light ground it does the opposite: it thins
+       strokes that were already the right weight, and the page reads washed out
+       even when the contrast ratio says it is nearly 13:1. Reported as "the
+       light theme text looks pale" on 2026-08-17, and the colour was not the
+       cause. */
+    -webkit-font-smoothing: antialiased;
+  }
+
+  [data-theme="light"] body {
+    -webkit-font-smoothing: auto;
+  }
+
+  /* Every interactive element gets a visible focus ring. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* The theme swap, crossfaded by the compositor. Finally puts --ease-out-soft
+     to work: it was defined and referenced nowhere. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 340ms;
+    animation-timing-function: var(--ease-out-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Belt and braces. ThemeProvider already skips startViewTransition
+       entirely under reduced motion, so this only catches a transition
+       started before the preference changed. */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+    }
+
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-border: var(--border);
+  --color-border-interactive: var(--border-interactive);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-stone: var(--stone);
+  --color-control: var(--control);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-on-accent: var(--on-accent);
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  --text-eyebrow: 0.72rem;
+  --text-hero: clamp(2.75rem, 1.6rem + 5.2vw, 6rem);
+  --text-display: clamp(2rem, 1.5rem + 2.4vw, 3.25rem);
+  --text-title: clamp(1.35rem, 1.2rem + 0.8vw, 1.85rem);
+
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer components {
@@ -48,57 +200,125 @@
     margin: 0 auto;
   }
 
-  .input {
-    @apply sm:flex-1 max-sm:w-full text-base leading-normal text-text-accent pl-5 max-sm:p-5 outline-none sm:border-none border max-sm:border-text-accent max-sm:rounded-full font-montserrat;
+  .eyebrow {
+    @apply text-(length:--text-eyebrow) uppercase tracking-[0.18em] text-text-muted;
+  }
+
+  .card-surface {
+    @apply bg-surface border border-border rounded-2xl;
+  }
+
+  /* Photography that has to carry text. The scrim holds near-solid page colour
+     across the text column, then releases the image. Both curves are tuned per
+     theme by the --photo-scrim-* tokens: a near-white wash reads as pale long
+     before it reaches the opacity text needs, so light falls away far faster
+     than dark does.
+
+     Used only where text sits on a photograph. Where nothing has to stay
+     readable, the photograph is left alone. */
+  .photo-scrim {
+    background: linear-gradient(
+      100deg,
+      var(--bg) 0%,
+      color-mix(in oklab, var(--bg) var(--photo-scrim-hold), transparent) 34%,
+      color-mix(in oklab, var(--bg) var(--photo-scrim-mid), transparent) 62%,
+      color-mix(in oklab, var(--bg) var(--photo-scrim-far), transparent) 100%
+    );
+  }
+
+  /* Lifts a dark photograph on the dark theme, and puts contrast back into one
+     the light scrim would otherwise flatten. */
+  .photo-filter {
+    filter: var(--photo-filter);
+  }
+
+  /* A <select> whose dropdown belongs to the theme rather than to the OS.
+     Setting colours on the <option>s alone fixed the unreadable text, but the
+     highlight bar stayed the operating system's blue, because the browser
+     paints that itself.
+     `appearance: base-select` hands the popup over to CSS entirely. It is
+     Chromium 135+ only and deliberately wrapped in @supports: anywhere else
+     this block does nothing and the browser keeps drawing its own list, which
+     still works and is still readable thanks to the option colours set in
+     FilterBar. Progressive enhancement, no JavaScript, no dependency. */
+  /* The fallback, and the fix for the unreadable list: a browser that paints
+     its own popup takes the colours from the options themselves. Without this
+     the options had no background, so Chrome drew a default light list and put
+     the near-white --text on top of it.
+
+     These live here rather than as [&>option] utilities on the element. Tailwind
+     utilities sit in a later cascade layer than components, and layer order is
+     resolved before specificity — so a utility was overriding the :hover rule
+     below however specific that rule was made. One owner, no fight. */
+  .select-themed option {
+    background-color: var(--surface);
+    color: var(--text);
+  }
+
+  @supports (appearance: base-select) {
+    .select-themed,
+    .select-themed::picker(select) {
+      appearance: base-select;
+    }
+
+    /* base-select turns the control into a flex container holding a generated
+       button for the current value, and its default align-items is `normal` —
+       so the value sat against the top of the 44px pill instead of on its
+       centre line, which is where the native control had put it. */
+    .select-themed {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .select-themed::picker(select) {
+      background: var(--surface);
+      border: 1px solid var(--border-interactive);
+      border-radius: 0.9rem;
+      padding: 0.25rem;
+      margin-top: 0.35rem;
+      color: var(--text);
+    }
+
+    .select-themed option {
+      border-radius: 0.65rem;
+      padding: 0.5rem 0.75rem;
+      transition: background-color 150ms, color 150ms;
+    }
+
+    /* The highlight matches the active filter chip — bg-accent on on-accent —
+       so the two controls either side of the product grid agree with each other
+       instead of one of them borrowing the OS palette.
+
+       :focus-visible rather than :focus. Opening the list with a click puts
+       focus on the currently selected option, so with plain :focus two rows lit
+       up at once — the one you had and the one you were pointing at — and
+       neither could be told from the other. Keyboard users still get the
+       highlight, because that is what :focus-visible is for. */
+    .select-themed option:hover,
+    .select-themed option:focus-visible {
+      background: var(--accent);
+      color: var(--on-accent);
+    }
+
+    /* The selected row is named by its checkmark and a tint of the accent, not
+       by a fill, so it never competes with the row under the pointer. */
+    .select-themed option:checked {
+      color: var(--accent-strong);
+    }
+
+    .select-themed option:checked:hover {
+      color: var(--on-accent);
+    }
   }
 }
 
 @layer utilities {
-  .padding {
-    @apply sm:px-16 px-8 sm:py-24 py-12;
-  }
+  .padding-x { @apply sm:px-16 px-6; }
+  .padding-y { @apply sm:py-24 py-14; }
+  .padding   { @apply sm:px-16 px-6 sm:py-24 py-14; }
 
-  .padding-x {
-    @apply sm:px-16 px-8;
-  }
-
-  .padding-y {
-    @apply sm:py-24 py-12;
-  }
-
-  .padding-l {
-    @apply sm:pl-16 pl-8;
-  }
-
-  .padding-r {
-    @apply sm:pr-16 pr-8;
-  }
-
-  .padding-t {
-    @apply sm:pt-24 pt-12;
-  }
-
-  .padding-b {
-    @apply sm:pb-24 pb-12;
-  }
-
-  .info-text {
-    @apply font-montserrat text-text-accent/80 text-lg leading-7;
-  }
-
-  .shadow-3xl {
-    box-shadow: var(--shadow-3xl);
-  }
-
-  .bg-hero {
-    background-image: var(--background-image-hero);
-    background-size: cover;
-    background-position: center;
-    /* background-repeat: no-repeat; */
-    /* background-attachment: fixed; */
-  }
-
-  .max-w-wide {
-    max-width: var(--screen-wide);
-  }
+  /* The Ken Burns keyframes were removed on 2026-08-16 with the hero they
+     belonged to. The hero is a scroll-driven two-shot camera move now, and its
+     transforms are Motion values on the plates themselves — nothing animates
+     forever, and nothing animates off screen. See sections/Hero.jsx. */
 }

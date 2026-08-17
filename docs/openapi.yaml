@@ -1,0 +1,354 @@
+openapi: 3.0.3
+info:
+  title: Moss API
+  version: 0.0.0
+  description: >
+    Server for the Moss Decorations storefront (server/). Base path /api/v1.
+    Two response envelopes are in use — see components.schemas below and
+    .claude/rules/api.md for the authoritative description.
+servers:
+  - url: http://localhost:{port}/api/v1
+    variables:
+      port:
+        default: "3000"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: >
+        Required on routes wired through middlewares/auth.middleware.js
+        (`authorise`). Send as `Authorization: Bearer <token>`.
+  schemas:
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+        data: {}
+      required: [success]
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+      required: [success, error]
+paths:
+  /auth/sign-up:
+    post:
+      summary: Create a new user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name:
+                  type: string
+                  minLength: 3
+                  maxLength: 50
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 6
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "409":
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/sign-in:
+    post:
+      summary: Sign in with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Signed in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Invalid password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/sign-out:
+    post:
+      summary: Sign out
+      x-status: incomplete
+      description: >
+        Wired to auth.controller.js's signOut, but that handler body is
+        currently empty — it never sends a response, so this route will
+        hang until the client times out. Needs a real implementation before
+        the response shape here can be documented.
+      responses: {}
+  /users:
+    get:
+      summary: Get all users
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+    post:
+      summary: Create a new user
+      x-status: stub
+      responses:
+        "200":
+          description: Stub response only — no controller, no validation, no DB write
+  /users/{id}:
+    get:
+      summary: Get a single user by id
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User found (password field excluded)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      summary: Update user
+      x-status: stub
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Stub response only — no controller
+    delete:
+      summary: Delete user
+      x-status: stub
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Stub response only — no controller
+  /orders:
+    get:
+      summary: Get all orders
+      x-status: stub
+      responses:
+        "200":
+          description: Stub response only — no controller
+    post:
+      summary: Create a new order
+      x-status: stub
+      responses:
+        "200":
+          description: Stub response only — no controller
+  /orders/{id}:
+    get:
+      summary: Get order details
+      x-status: stub
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Stub response only — no controller
+    put:
+      summary: Update order
+      x-status: stub
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Stub response only — no controller
+    delete:
+      summary: Delete order
+      x-status: stub
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Stub response only — no controller
+  /orders/user/{id}:
+    get:
+      summary: Get orders by user ID
+      x-status: stub
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Stub response only — no controller
+  /orders/{id}/cancel:
+    put:
+      summary: Cancel order
+      x-status: stub
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Stub response only — no controller
+  /orders/{id}/status:
+    get:
+      summary: Get order status
+      x-status: stub
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Stub response only — no controller
+  /categories:
+    get:
+      summary: Get all categories
+      x-status: stub
+      responses:
+        "200":
+          description: Stub response only — no controller
+    post:
+      summary: Create a new category
+      x-status: stub
+      responses:
+        "200":
+          description: Stub response only — no controller
+  /categories/{id}:
+    get:
+      summary: Get category details
+      x-status: stub
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Stub response only — no controller
+    put:
+      summary: Update category
+      x-status: stub
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Stub response only — no controller
+    delete:
+      summary: Delete category
+      x-status: stub
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Stub response only — no controller
+  /categories/{id}/products:
+    get:
+      summary: Get products by category ID
+      x-status: stub
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Stub response only — no controller
+  /products:
+    get:
+      summary: Get all products
+      x-status: stub
+      responses:
+        "200":
+          description: Stub response only — no controller
+    post:
+      summary: Create a new product
+      x-status: stub
+      responses:
+        "200":
+          description: Stub response only — no controller
+  /products/{id}:
+    get:
+      summary: Get product details
+      x-status: stub
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Stub response only — no controller
+    put:
+      summary: Update product
+      x-status: stub
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Stub response only — no controller
+    delete:
+      summary: Delete product
+      x-status: stub
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Stub response only — no controller
+  /products/category/{id}:
+    get:
+      summary: Get products by category ID
+      x-status: stub
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Stub response only — no controller
+  /products/{id}/availability:
+    get:
+      summary: Get product availability
+      x-status: stub
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Stub response only — no controller

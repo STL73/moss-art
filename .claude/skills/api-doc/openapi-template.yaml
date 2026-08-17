@@ -1,0 +1,43 @@
+openapi: 3.0.3
+info:
+  title: Moss API
+  version: 0.0.0
+  description: >
+    Server for the Moss Decorations storefront (server/). Base path /api/v1.
+    Two response envelopes are in use — see components.schemas below and
+    .claude/rules/api.md for the authoritative description.
+servers:
+  - url: http://localhost:{port}/api/v1
+    variables:
+      port:
+        default: "3000"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: >
+        Required on routes wired through middlewares/auth.middleware.js
+        (`authorise`). Send as `Authorization: Bearer <token>`.
+  schemas:
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+        data: {}
+      required: [success]
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+      required: [success, error]
+paths: {}
