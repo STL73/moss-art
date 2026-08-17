@@ -57,6 +57,33 @@ Done 2026-08-17:
   with nothing in the basket showed a blank panel, a £0.00 subtotal and a button to `/cart`, which
   is also empty — a dead end one click from every page. Fixed in `352bc69`, with the mark drawing
   itself above the message.
+- **The site says it is not trading yet, in two places on purpose.** A `StatusBanner` above the
+  header states it on arrival; the cart drawer states it again at the point someone has formed the
+  intention to buy. That is deliberate repetition rather than duplication — one is for arriving,
+  the other for deciding — and it is the only place the site apologises for anything. Said once,
+  properly, rather than beside every disabled control: a page that excuses each gap reads as
+  unfinished, where one clear statement reframes every placeholder as a scope decision. The banner
+  is **not sticky**, so it costs a strip of the first screen and nothing after it, which is also
+  why it needs no dismiss button or the stored state behind one.
+
+  **A marquee was Slav's suggestion for carrying it, and was rejected.** Moving content that starts
+  on its own and never ends needs a pause control under WCAG 2.2.2, and this is the one sentence on
+  the site whose whole job is to be read once and understood — motion makes the hardest-working
+  line the hardest to read. A marquee suits plural, low-stakes content: stockists, press,
+  certifications. There is none yet, and the candidates that exist are already said twice (the
+  value claims are in the hero band and the footer; the categories are in the filter bar and the
+  footer). `StatusBanner.test.jsx` asserts it does not animate, because "make the banner move" is
+  an easy thing to ask for later without the pause control that would have to come with it.
+
+- **An email address broke the contact page at larger text sizes.** `customer@mossart.com` has no
+  break opportunity, so it set its grid item's min-content width — and a grid item cannot shrink
+  below that, so the card grew wider than the screen instead of the text wrapping. Invisible at the
+  default size and plain with the system text size up: at a 20px root on a 390px phone the card's
+  right edge landed at **397px**, off the side of the viewport. That is content lost to a text
+  resize, which is WCAG 1.4.4. Fixed with `overflow-wrap: anywhere` rather than `break-words` —
+  only `anywhere` changes the intrinsic min-content size, which is the thing the grid was sizing
+  against. Verified at 16px, 20px and 32px root.
+
 - **Three bugs Slav found on the live site**, all fixed the same evening.
 
   **The theme icons never started animating.** Reported as "the moon doesn't move until you click

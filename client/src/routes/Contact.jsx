@@ -107,9 +107,26 @@ const Contact = () => (
                             <Icon size={18} />
                             <p className="eyebrow">{label}</p>
                         </div>
+                        {/* overflow-wrap: anywhere, not break-words.
+                            An email address has no break opportunity in it, so
+                            it sets this grid item's min-content width — and a
+                            grid item cannot shrink below that, so the card grew
+                            wider than the screen instead of the text wrapping.
+                            Invisible at the default text size and obvious with
+                            the system size turned up: at a 20px root on a 390px
+                            phone the card's right edge landed at 397px, off the
+                            side of the viewport. That is content lost to a text
+                            resize, which WCAG 1.4.4 is about.
+
+                            break-words would not fix it. It permits a break
+                            when a word overflows but does not change the
+                            intrinsic min-content size, so the grid column would
+                            still refuse to shrink. `anywhere` does change it,
+                            which is the whole reason it exists. */}
                         <a
                             href={href}
                             className="block mt-3 font-display text-(length:--text-title)
+                                       [overflow-wrap:anywhere]
                                        hover:text-accent transition-colors duration-200"
                         >
                             {value}

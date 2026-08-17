@@ -8,6 +8,7 @@ import ScrollToHash from '../components/ScrollToHash';
 import BackToTop from '../components/BackToTop';
 import NavigationProgress from '../components/NavigationProgress';
 import SkipLink from '../components/SkipLink';
+import StatusBanner from '../components/StatusBanner';
 
 // Motion drives its animations through the Web Animations API, which the
 // prefers-reduced-motion block in index.css cannot reach — that block only
@@ -23,6 +24,11 @@ const RootLayout = () => (
             {/* Every route below Home is its own chunk, so a link click waits
                 on the network before the page changes. This says so. */}
             <NavigationProgress />
+            {/* Above the header and after the skip link: first thing read on
+                arrival, and still skippable in one tab for anyone who does not
+                want it. Not sticky, so it scrolls away and the header takes
+                over the top of the viewport. */}
+            <StatusBanner />
             <Nav />
             {/* tabIndex -1 makes <main> focusable by script but not by tabbing,
                 which is what lets the skip link move focus here rather than

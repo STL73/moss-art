@@ -174,8 +174,22 @@ const CartDrawer = () => {
                                         {formatPrice(total)}
                                     </span>
                                 </div>
-                                <p className="mt-1 mb-5 text-xs text-text-muted">
+                                <p className="mt-1 text-xs text-text-muted">
                                     Delivery calculated at checkout.
+                                </p>
+                                {/* Said once, here, rather than apologised for
+                                    beside every disabled control. This is where
+                                    someone forms the intention to buy, so it is
+                                    the last honest moment to say the shop is not
+                                    open — before they reach the basket page and
+                                    find the checkout button greyed out.
+
+                                    The line above promises a checkout, so
+                                    leaving this out made the drawer contradict
+                                    itself. */}
+                                <p className="mt-2 mb-5 text-xs text-text-muted">
+                                    <strong className="font-medium text-text">Not trading yet.</strong>{' '}
+                                    You can build a basket, but nothing can be ordered.
                                 </p>
                                 <Button as={Link} to="/cart" onClick={closeDrawer} fullWidth>
                                     View basket
