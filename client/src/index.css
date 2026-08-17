@@ -216,12 +216,35 @@
 
      Used only where text sits on a photograph. Where nothing has to stay
      readable, the photograph is left alone. */
+  /* The stops are lengths, not percentages, and that is the whole fix.
+     Percentages measure the section; the text measures the container. Those are
+     the same thing at exactly one viewport width and wrong at every other one.
+     Measured on the live site, the copy column's right edge sits at 56% of a
+     1440 viewport, 54% of a 1920 — and 94% of a 390 phone. Against a hold that
+     ended at 34%, most of every line on a phone sat in the falloff, on a scrim
+     that reaches 22% in dark and 4% in light. On the bare photograph, in other
+     words.
+
+     The copy column is max-w-184 (46rem) inside a 1440px container padded by
+     64px, so its right edge is 800px from the container's left. The two forms
+     in each max() cover the two regimes: below 1440 the container is not
+     centred and the fixed rem value governs; above it the container gains equal
+     side margins and calc(50% + 80px) tracks them.
+
+     On a phone every stop lands past the right edge of the screen, so the whole
+     section renders inside the opening ramp and the scrim is near-solid. That
+     is the correct behaviour rather than a side effect: on a narrow screen the
+     photograph is *behind* the text, not beside it, so a horizontal reveal has
+     nothing to reveal into. The picture becomes atmosphere and stops competing
+     with the words. */
   .photo-scrim {
     background: linear-gradient(
       100deg,
       var(--bg) 0%,
-      color-mix(in oklab, var(--bg) var(--photo-scrim-hold), transparent) 34%,
-      color-mix(in oklab, var(--bg) var(--photo-scrim-mid), transparent) 62%,
+      color-mix(in oklab, var(--bg) var(--photo-scrim-hold), transparent)
+        max(52rem, calc(50% + 80px)),
+      color-mix(in oklab, var(--bg) var(--photo-scrim-mid), transparent)
+        max(66rem, calc(50% + 304px)),
       color-mix(in oklab, var(--bg) var(--photo-scrim-far), transparent) 100%
     );
   }

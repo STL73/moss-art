@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, it, expect } from 'vitest';
 import Footer from './Footer';
-import { footerLinks } from '../constants';
+import { footerLinks, socialMedia } from '../constants';
 import { categories, products } from '../data/products';
 
 const renderFooter = () => render(<MemoryRouter><Footer /></MemoryRouter>);
@@ -66,6 +66,30 @@ describe('Footer', () => {
                 .forEach((category) => {
                     expect(linked, `"${category.slug}" is missing from the footer`).toContain(category.slug);
                 });
+        });
+    });
+
+    // The shop has no social accounts yet. The icons stay as a statement of
+    // which platforms it will be on, but nothing that looks like a link may
+    // behave like one that goes nowhere — an href of "" reloads the page and
+    // "#" jumps to the top, and both keep the tab stop and the announcement.
+    describe('the social icons, while there are no accounts', () => {
+        it('renders none of them as a link', () => {
+            renderFooter();
+
+            socialMedia.forEach(({ label }) => {
+                expect(
+                    screen.queryByRole('link', { name: label }),
+                    `${label} must not be a link until it has a destination`
+                ).toBeNull();
+            });
+        });
+
+        // The guard for the other direction: the moment a real URL is added to
+        // the constant, it has to become a proper anchor again rather than
+        // silently staying a span.
+        it('would render one as a link if it had a destination', () => {
+            expect(socialMedia.every((s) => s.href === undefined)).toBe(true);
         });
     });
 });

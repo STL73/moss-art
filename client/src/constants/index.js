@@ -78,9 +78,25 @@ export const footerLinks = [
     },
 ];
 
+/**
+ * The platforms the shop will be on, with no destinations yet.
+ *
+ * These carried `https://facebook.com` and the like until 2026-08-17 — bare
+ * platform front doors, not accounts. Nothing personal was ever exposed, but
+ * they looked like they pointed somewhere: those sites redirect a *logged-in*
+ * visitor to their own feed, which is why they appeared to link to Slav's
+ * accounts when he clicked them. A stranger got a login page.
+ *
+ * `href` is deliberately absent rather than `""` or `"#"`. An empty href
+ * resolves to the current page, so clicking one would reload the site; `"#"`
+ * jumps to the top and still announces as a link. With no href the Footer
+ * renders a span instead of an anchor — out of the tab order, not announced as
+ * a link, and visually unchanged. Add the real URLs here when the accounts
+ * exist and they become links again with no other change.
+ */
 export const socialMedia = [
-    { Icon: FaFacebookF, label: 'Facebook', href: 'https://facebook.com' },
-    { Icon: FaXTwitter, label: 'X', href: 'https://x.com' },
-    { Icon: FaInstagram, label: 'Instagram', href: 'https://instagram.com' },
-    { Icon: FaTiktok, label: 'TikTok', href: 'https://tiktok.com' },
+    { Icon: FaFacebookF, label: 'Facebook' },
+    { Icon: FaXTwitter, label: 'X' },
+    { Icon: FaInstagram, label: 'Instagram' },
+    { Icon: FaTiktok, label: 'TikTok' },
 ];

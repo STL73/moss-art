@@ -52,6 +52,19 @@ describe('ProductCard', () => {
         expect(onAdd).toHaveBeenCalledWith(product);
     });
 
+    // On a pointer device the button rests as an outline and fills on hover. A
+    // touch device never gets that hover, so without this it sits permanently
+    // in a state designed to be temporary and reads as unfinished. Expressible
+    // as a class, so it is pinned as one rather than left to a screenshot.
+    it('ships the filled treatment on touch, where there is no hover', () => {
+        renderCard();
+        const addButton = screen.getByRole('button', { name: /add glass sphere/i });
+
+        expect(addButton.className).toContain('[@media(hover:none)]:opacity-100');
+        expect(addButton.className).toContain('[@media(hover:none)]:bg-accent');
+        expect(addButton.className).toContain('[@media(hover:none)]:text-on-accent');
+    });
+
     it('gives the image meaningful alt text', () => {
         renderCard();
         expect(screen.getByAltText('Glass Sphere')).toBeInTheDocument();

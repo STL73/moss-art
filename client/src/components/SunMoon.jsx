@@ -112,11 +112,24 @@ const SunMoon = ({ shape, size = 18, active = false }) => {
                     <mask id={maskId}>
                         {/* White keeps, black removes. */}
                         <rect x="0" y="0" width="24" height="24" fill="white" />
+                        {/* An explicit initial, not initial={false}.
+                            initial={false} renders the element at its animate
+                            target and skips the mount animation — and for a
+                            looping animation, skipping the mount animation
+                            means it never starts. Whichever icon was active on
+                            first paint sat frozen at its last keyframe until
+                            the theme was toggled, because a change to `animate`
+                            was the only thing that made Motion animate. Read as
+                            "the moon doesn't move", but the sun was equally
+                            stuck on a cold load in light theme. Naming the
+                            first keyframe keeps the no-jump behaviour
+                            initial={false} was there for, and lets the loop
+                            start on mount. */}
                         <motion.circle
                             r={MOON_SHADOW.r}
                             cy={MOON_SHADOW.cy}
                             fill="black"
-                            initial={false}
+                            initial={{ cx: active ? MOON_FROM : 18 }}
                             animate={active ? { cx: [MOON_FROM, MOON_TO] } : { cx: 18 }}
                             transition={active ? MOON_SWEEP : { duration: 0 }}
                         />
@@ -142,7 +155,10 @@ const SunMoon = ({ shape, size = 18, active = false }) => {
                     // disc. Without it the origin is the SVG viewport's corner
                     // and the rays orbit off the edge of the icon.
                     style={{ transformOrigin: '50% 50%', transformBox: 'fill-box' }}
-                    initial={false}
+                    // See the moon's mask circle above for why this is not
+                    // initial={false}. Zero either way, so there is nothing to
+                    // branch on here.
+                    initial={{ rotate: 0 }}
                     animate={active ? { rotate: 360 } : { rotate: 0 }}
                     transition={active ? SUN_TURN : { duration: 0 }}
                 >
@@ -150,7 +166,12 @@ const SunMoon = ({ shape, size = 18, active = false }) => {
                         <motion.line
                             key={`${ray.x1}-${ray.y1}`}
                             {...ray}
-                            initial={false}
+                            // The first keyframe of this ray's own sequence, so
+                            // the shimmer starts on mount rather than after the
+                            // first theme change.
+                            initial={{
+                                pathLength: active && index % 2 === 0 ? SHINE_SHORT : 1,
+                            }}
                             // Odd and even in opposite phase. Both sequences
                             // start and end on the same value so the loop is
                             // seamless without a reverse.

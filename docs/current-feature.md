@@ -14,11 +14,24 @@ it carries the reasoning, not just the outcome.
 
 ## Where things stand
 
-**178 tests**, lint clean, production build green at 116.63 kB gzipped. Committed but **not yet
-pushed** as of 2026-08-17.
+**The storefront is live at <https://mossart.spireforge.co.uk>** — the first project of Slav's at a
+public URL, which is the only thing [[NORTH STAR]] actually measures. Also reachable at
+`mossart.slavi-lambov73.workers.dev`.
 
-`feat/frontend-redesign-foundations` is ahead of `main`, and
-[PR #1](https://github.com/STL73/Moss/pull/1) is open with a full description.
+**184 tests**, lint clean, production build green at 116.65 kB gzipped.
+[PR #1](https://github.com/STL73/Moss/pull/1) is **merged**; `main` holds the storefront and every
+push to it deploys automatically. There is no staging step and no preview URLs — non-production
+branch builds are switched off deliberately.
+
+**It deploys as a Worker with static assets, not as a Cloudflare Pages project.** Cloudflare no
+longer creates new Pages projects from the dashboard; the Pages tab is documentation only. The
+material difference is that **Pages inferred SPA routing from the absence of a top-level
+`404.html` and Workers does not** — `client/wrangler.jsonc` sets
+`not_found_handling: "single-page-application"` explicitly, and without it every deep link 404s
+while clicking through to the same page works. Build settings live in the dashboard: production
+branch `main`, path `client`, build `npm run build`, deploy `npx wrangler deploy`. The Worker name
+must match `name` in `wrangler.jsonc` exactly or the build is refused. Node is pinned by
+`client/.node-version`, because Workers Builds still defaults to Node 18 and Vite 8 needs 20.19+.
 
 Done 2026-08-17:
 
@@ -44,6 +57,41 @@ Done 2026-08-17:
   with nothing in the basket showed a blank panel, a £0.00 subtotal and a button to `/cart`, which
   is also empty — a dead end one click from every page. Fixed in `352bc69`, with the mark drawing
   itself above the message.
+- **Three bugs Slav found on the live site**, all fixed the same evening.
+
+  **The theme icons never started animating.** Reported as "the moon doesn't move until you click
+  the sun and come back", and the real fault was broader: whichever icon was active *on first
+  paint* stayed frozen, and a cold load in light theme left the sun stuck at `rotate(360deg)` in
+  exactly the same way. Cause was `initial={false}`, which renders an element at its animate target
+  and skips the mount animation — and for a looping animation, skipping the mount animation means
+  it never starts. Toggling worked only because a change to `animate` is something Motion always
+  animates. Each element now names its own first keyframe, which keeps the no-jump behaviour
+  `initial={false}` was there for. Five tests pin it, verified to fail against the old code.
+
+  **The scrim released the photograph before the text ended.** The gradient used percentage stops:
+  near-solid to 34% of the section, falling to 22% in dark and **4% in light** by the far edge. But
+  the copy column is a fixed 46rem inside a padded 1440px container, so its right edge lands at 56%
+  of a 1440 viewport, 54% of a 1920 — and **94% of a 390 phone**. A percentage is right at one
+  viewport width and wrong at every other. On a phone most of every line sat on what was
+  effectively the bare photograph. The stops are lengths now, `max(52rem, calc(50% + 80px))` and
+  `max(66rem, calc(50% + 304px))`, so the falloff tracks the copy rather than the viewport; on a
+  narrow screen every stop lands off the right edge and the scrim goes near-solid, which is correct
+  because there the photograph is *behind* the text rather than beside it. **Consequence worth
+  knowing: the picture is nearly invisible on a phone.** Lowering `--photo-scrim-hold` is the dial
+  if more of it should show.
+
+  **The card Add button read as unfinished on touch.** It rests as an outline and fills on hover;
+  a touch device never gets that hover, so it sat permanently in a state designed to be temporary.
+  Touch now gets the filled treatment via `[@media(hover:none)]`, which is the existing hover
+  appearance and therefore the already-measured 5.87:1 dark / 4.98:1 light.
+
+- **The footer's social links are deliberate placeholders, and they are not leaking anything.**
+  Reported as pointing at Slav's real accounts; they do not. The hrefs are bare platform home pages
+  — `facebook.com`, `x.com`, `instagram.com`, `tiktok.com`, verified in the deployed bundle — and
+  what happened is that those sites redirect a *logged-in* visitor to their own feed. A stranger
+  gets a login page. Left as-is by decision, same status as the fictional phone number and email.
+  They still dead-end, so replace them with real handles before launch.
+
 - **The light theme is swept.** Slav reviewed the cart drawer, products and product detail in light
   and passed all three. Open since 2026-08-12 — it is the reason `/lab` was built, and it got
   skipped on the day. Nothing left to check here.
@@ -144,10 +192,9 @@ work rather than in front of it.
    WebGL displacement warp on the dive. Needs two new photographs. **A literal flythrough is a
    video shot**: three.js is ~150 kB gzipped against a 115 kB budget, and no video-generation MCP is
    installed.
-3. **Merge PR #1 into `main`**, then **deploy to Cloudflare Pages** — root directory `client`, build
-   `npm run build`, output `dist`. No `_redirects` needed: Pages auto-detects an SPA when there is
-   no top-level `404.html`. Verify a deep link on the live URL. Use `moss.spireforge.co.uk` or the
-   free `*.pages.dev`.
+3. ~~**Merge PR #1 and deploy**~~ — **done 2026-08-17.** See "Where things stand" above for how it
+   is wired, including the SPA-routing difference between Pages and Workers that the old wording
+   here got wrong.
 
 Two shots to redo on a fresh neuron allocation:
 

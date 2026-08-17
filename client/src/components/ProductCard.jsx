@@ -137,7 +137,17 @@ const ProductCard = ({ product, onAdd }) => {
                         where they are. A touch device has no hover to wait for,
                         so the hover:none query keeps it permanently visible
                         rather than leaving a phone with a button it can never
-                        summon. */}
+                        summon.
+
+                        Touch also gets the FILLED treatment, not the outline.
+                        The outline is a resting state designed to resolve into
+                        a fill on hover; on a phone that resolution never comes,
+                        so the button sat permanently in a state meant to be
+                        temporary and read as unfinished. This ships the hover
+                        appearance as the resting one where hover does not
+                        exist. No new colours, so the contrast is the figure
+                        already measured for the hover state — 5.87:1 in dark
+                        and 4.98:1 in light. */}
                     <button
                         type="button"
                         onClick={() => onAdd(product)}
@@ -152,6 +162,8 @@ const ProductCard = ({ product, onAdd }) => {
                                    focus-visible:ring-offset-2 focus-visible:ring-offset-surface
                                    group-hover:opacity-100
                                    [@media(hover:none)]:opacity-100
+                                   [@media(hover:none)]:bg-accent
+                                   [@media(hover:none)]:text-on-accent
                                    motion-reduce:transition-none"
                     >
                         Add to basket

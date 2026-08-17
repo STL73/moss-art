@@ -21,21 +21,37 @@ const Footer = () => (
                     {/* The circles stay 36px because that is the design; the
                         ::after overlay extends each tap area to 44px without
                         changing anything you can see. */}
+                    {/* An anchor only when there is somewhere to go. Until the
+                        accounts exist these render as spans: no href means no
+                        tab stop, nothing announced as a link, and no hover
+                        colour promising a destination — while the row looks
+                        exactly the same. The alternative, an href of "" or "#",
+                        would have kept all of that and added a click that
+                        reloads the page or jumps to the top. */}
                     <div className="flex items-center gap-3 mt-6">
-                        {socialMedia.map(({ Icon, label, href }) => (
-                            <a
-                                key={label}
-                                href={href}
-                                aria-label={label}
-                                className="relative size-9 rounded-full border border-border-interactive
-                                           grid place-items-center
-                                           after:absolute after:-inset-1 after:content-['']
-                                           text-text-muted hover:text-accent hover:border-accent-strong
-                                           transition-colors duration-200"
-                            >
-                                <Icon size={15} />
-                            </a>
-                        ))}
+                        {socialMedia.map(({ Icon, label, href }) => {
+                            const Tag = href ? 'a' : 'span';
+
+                            return (
+                                <Tag
+                                    key={label}
+                                    href={href}
+                                    // Announced only when it does something.
+                                    // A screen reader gaining "Instagram" with
+                                    // no action behind it is noise.
+                                    aria-label={href ? label : undefined}
+                                    aria-hidden={href ? undefined : 'true'}
+                                    className={`relative size-9 rounded-full border border-border-interactive
+                                                grid place-items-center text-text-muted
+                                                after:absolute after:-inset-1 after:content-['']
+                                                transition-colors duration-200 ${
+                                        href ? 'hover:text-accent hover:border-accent-strong' : ''
+                                    }`}
+                                >
+                                    <Icon size={15} />
+                                </Tag>
+                            );
+                        })}
                     </div>
                 </div>
 
