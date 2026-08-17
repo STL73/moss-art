@@ -1,0 +1,41 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+
+	// Must match the Worker name in the Cloudflare dashboard exactly. Workers
+	// Builds fails the build outright if they differ, rather than renaming
+	// anything — the check exists so a repo cannot silently deploy over a
+	// different Worker than the one you connected.
+	"name": "mossart",
+
+	// The date whose Workers runtime behaviour this deploy is pinned to.
+	// Raising it opts into later runtime changes; leaving it alone means a
+	// future Cloudflare release cannot change how this site behaves.
+	"compatibility_date": "2026-08-17",
+
+	"assets": {
+		// Relative to this file, which sits in client/ — the Workers Builds
+		// root directory. `npm run build` writes here.
+		"directory": "./dist",
+
+		// The whole reason this file exists. The storefront is a single-page
+		// app: only index.html exists on disk, and every other route is drawn
+		// by React Router in the browser. Without this, typing
+		// /products/glass-sphere into the address bar — or reloading it, or
+		// following a shared link — returns a 404, because there is no file at
+		// that path. "single-page-application" serves index.html instead and
+		// lets the router resolve it.
+		//
+		// Cloudflare Pages used to infer this from the absence of a top-level
+		// 404.html. Workers static assets does not infer it; it has to be said.
+		"not_found_handling": "single-page-application"
+	},
+
+	// There is no `main`. This Worker serves static assets and nothing else —
+	// server/ is a separate Express app and is not deployed here. All product
+	// data comes from client/src/lib/api.js, which returns mock data, so the
+	// storefront runs standalone.
+
+	"observability": {
+		"enabled": true
+	}
+}
