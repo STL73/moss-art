@@ -43,6 +43,14 @@
     --photo-scrim-hold: 96%;   /* opacity where text sits */
     --photo-scrim-mid: 78%;    /* midpoint of the falloff */
     --photo-scrim-far: 22%;    /* opacity at the far edge */
+    /* Narrow screens, where the gradient below has no room to run and a flat
+       scrim is used instead. It is NOT --photo-scrim-hold: holding the text
+       value across the whole screen made the photograph disappear entirely on
+       a phone rather than become atmosphere. Lower means more picture.
+       Measured headroom in dark, which is the tighter theme because near-white
+       text over bright moss is the risky pairing: 88% leaves body text at
+       roughly 7.4:1, and it stays above the 4.5:1 floor down to about 75%. */
+    --photo-scrim-narrow: 88%;
     /* Two accents, not one variant of the same. --accent is the readable brand
        colour: it is rendered as TEXT on hover in the footer, cart, contact page
        and product cards, so it is capped by having to clear 4.5:1 against the
@@ -98,6 +106,10 @@
     --photo-scrim-hold: 97%;
     --photo-scrim-mid: 62%;
     --photo-scrim-far: 4%;
+    /* Light has far more headroom than dark here — near-black text over the
+       same bright moss measures around 12:1 at this value — but it is kept in
+       step so the two themes show the same amount of photograph. */
+    --photo-scrim-narrow: 88%;
     --accent: #1d6475;
     --accent-strong: #0f3b45;
     --stone: #75837f;
@@ -231,12 +243,16 @@
      centred and the fixed rem value governs; above it the container gains equal
      side margins and calc(50% + 80px) tracks them.
 
-     On a phone every stop lands past the right edge of the screen, so the whole
-     section renders inside the opening ramp and the scrim is near-solid. That
-     is the correct behaviour rather than a side effect: on a narrow screen the
-     photograph is *behind* the text, not beside it, so a horizontal reveal has
-     nothing to reveal into. The picture becomes atmosphere and stops competing
-     with the words. */
+     Below 52rem the first stop already sits past the right edge of the screen,
+     so the gradient has no room to run and the rule underneath replaces it with
+     a flat scrim. That is principled rather than a fallback: on a narrow screen
+     the photograph is *behind* the text, not beside it, so a horizontal reveal
+     has nothing to reveal into.
+
+     Splitting a phone down the middle instead — copy left, picture right, as on
+     desktop — was measured and rejected. Half of a 390px screen less padding is
+     171px, about 21 characters a line against a comfortable measure of 45 to
+     75. That is a worse readability problem than the one this fixes. */
   .photo-scrim {
     background: linear-gradient(
       100deg,
@@ -247,6 +263,17 @@
         max(66rem, calc(50% + 304px)),
       color-mix(in oklab, var(--bg) var(--photo-scrim-far), transparent) 100%
     );
+  }
+
+  /* 52rem is where the gradient's first stop stops fitting on the screen, so
+     below it there is nothing to interpolate towards and every phone would
+     otherwise render the opening ramp alone — near-solid, with the photograph
+     effectively gone. A flat scrim at a value chosen to let the picture through
+     instead. One number, --photo-scrim-narrow, governs how much shows. */
+  @media (width < 52rem) {
+    .photo-scrim {
+      background: color-mix(in oklab, var(--bg) var(--photo-scrim-narrow), transparent);
+    }
   }
 
   /* Lifts a dark photograph on the dark theme, and puts contrast back into one

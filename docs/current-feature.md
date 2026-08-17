@@ -75,22 +75,39 @@ Done 2026-08-17:
   viewport width and wrong at every other. On a phone most of every line sat on what was
   effectively the bare photograph. The stops are lengths now, `max(52rem, calc(50% + 80px))` and
   `max(66rem, calc(50% + 304px))`, so the falloff tracks the copy rather than the viewport; on a
-  narrow screen every stop lands off the right edge and the scrim goes near-solid, which is correct
-  because there the photograph is *behind* the text rather than beside it. **Consequence worth
-  knowing: the picture is nearly invisible on a phone.** Lowering `--photo-scrim-hold` is the dial
-  if more of it should show.
+  narrow screen every stop lands off the right edge, so below 52rem a flat scrim replaces the
+  gradient entirely — correct rather than a fallback, because there the photograph is *behind* the
+  text rather than beside it and a horizontal reveal has nothing to reveal into.
+
+  The first attempt held the text value across the whole phone screen and made the photograph
+  disappear, which Slav spotted immediately. `--photo-scrim-narrow` is the one number that governs
+  it, now **88%** — the moss reads as a real presence behind the copy while body text measures
+  roughly 7.4:1 in dark, the tighter of the two themes, and stays above the 4.5:1 floor down to
+  about 75%.
+
+  **Splitting a phone screen in half instead — copy left, picture right, as on desktop — was
+  measured and rejected.** Half of a 390px screen less padding is 171px, about 21 characters a line
+  against a comfortable measure of 45 to 75. If the photograph should be a photograph rather than a
+  presence on mobile, the answer is to stack it — a full-width band above the copy — not to split
+  the width.
 
   **The card Add button read as unfinished on touch.** It rests as an outline and fills on hover;
   a touch device never gets that hover, so it sat permanently in a state designed to be temporary.
   Touch now gets the filled treatment via `[@media(hover:none)]`, which is the existing hover
   appearance and therefore the already-measured 5.87:1 dark / 4.98:1 light.
 
-- **The footer's social links are deliberate placeholders, and they are not leaking anything.**
-  Reported as pointing at Slav's real accounts; they do not. The hrefs are bare platform home pages
-  — `facebook.com`, `x.com`, `instagram.com`, `tiktok.com`, verified in the deployed bundle — and
-  what happened is that those sites redirect a *logged-in* visitor to their own feed. A stranger
-  gets a login page. Left as-is by decision, same status as the fictional phone number and email.
-  They still dead-end, so replace them with real handles before launch.
+- **The footer's social icons no longer pretend to be links, and never leaked anything.** Reported
+  as pointing at Slav's real accounts; they did not. The hrefs were bare platform front doors —
+  `facebook.com`, `x.com`, `instagram.com`, `tiktok.com`, verified in the deployed bundle — and
+  those sites redirect a *logged-in* visitor to their own feed, which is why they looked personal
+  when he clicked them. A stranger got a login page.
+
+  They are now rendered without an `href` at all, which makes the footer emit a `<span>` rather
+  than an `<a>`: out of the tab order, not announced as a link, visually identical. **Not `""` and
+  not `"#"`** — an empty href resolves to the current page so a click reloads the site, `"#"` jumps
+  to the top, and both keep the tab stop and the announcement. Putting a real URL back in
+  `socialMedia` turns it into an anchor again with no other change, and a test asserts both
+  directions.
 
 - **The light theme is swept.** Slav reviewed the cart drawer, products and product detail in light
   and passed all three. Open since 2026-08-12 — it is the reason `/lab` was built, and it got
