@@ -1,4 +1,5 @@
 import { useState, useRef, useLayoutEffect } from 'react';
+import { indicatorBox } from '../utils/indicatorBox';
 import { motion } from 'motion/react';
 import { categories } from '../data/products';
 
@@ -70,13 +71,11 @@ const FilterBar = ({ active, onCategoryChange, sort, onSortChange, count }) => {
         const measure = () => {
             const tab = list.querySelector('[data-active="true"]');
             if (!tab) return;
-            setBox((current) => ({
-                left: tab.offsetLeft,
-                right: list.scrollWidth - (tab.offsetLeft + tab.offsetWidth),
-                top: tab.offsetTop,
-                height: tab.offsetHeight,
-                movingRight: current ? tab.offsetLeft >= current.left : true,
-            }));
+            // clientWidth, not scrollWidth — see utils/indicatorBox.js, which
+            // holds the arithmetic and the reason it is measured against the
+            // list's padding box. Getting it wrong is invisible on a desktop
+            // and collapses the indicator to nothing on a narrow screen.
+            setBox((current) => indicatorBox(tab, list.clientWidth, current));
         };
 
         measure();
