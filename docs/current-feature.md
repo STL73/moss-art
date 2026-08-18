@@ -84,22 +84,6 @@ Done 2026-08-17:
   only `anywhere` changes the intrinsic min-content size, which is the thing the grid was sizing
   against. Verified at 16px, 20px and 32px root.
 
-- **The photography was then let through the scrim on desktop**, for the hero as well as the two
-  `PhotoBackdrop` sections. The reveal was holding far too much: `--photo-scrim-mid` went 78% → 45%
-  in dark and 62% → 42% in light, `--photo-scrim-far` 22% → 8% and 4% → 0%, and the sections' mid
-  stop moved from `max(66rem, calc(50% + 304px))` to `max(56rem, calc(50% + 176px))` so the picture
-  opens just after the copy ends rather than 250px later.
-
-  **Text contrast is untouched by all of it**, which is the safety argument: `--photo-scrim-hold`
-  is unchanged at 96%/97%, the copy sits entirely inside the hold region, and every number that
-  moved governs the region past where text can reach.
-
-  The hero came along because it shares the tokens — but it still had *percentage* stops, so
-  lowering the values alone would have made it worse on a phone, where its copy runs past the 78%
-  stop. Its gradient moved out of an inline style in `Hero.jsx` into `.hero-scrim` in `index.css`
-  (an inline style cannot carry a media query), got length-based stops of its own, and now takes
-  the same narrow-screen flat rule. Hero mobile improved as a side effect.
-
 - **Three bugs Slav found on the live site**, all fixed the same evening.
 
   **The theme icons never started animating.** Reported as "the moon doesn't move until you click

@@ -33,10 +33,16 @@ const CUT_AT = 0.45;
 const TALL = 'relative h-[220vh]';
 const STAGE = 'sticky top-0 h-screen overflow-hidden';
 
-// The scrim now lives in index.css as .hero-scrim rather than as an inline
-// style here. It needs a media query — a phone gets a flat scrim because the
-// copy runs the full width and a horizontal reveal has nothing to reveal into —
-// and an inline style cannot carry one.
+// The shared .photo-scrim releases the image at 34% of the width, which suits
+// the Story section's narrower column but leaves the tail of this headline on
+// open photograph. This holds to 42% — past the end of the copy — then clears
+// fast, so the droplet at 62% stands in open picture rather than under a veil.
+const HERO_SCRIM = `linear-gradient(100deg,
+    var(--bg) 0%,
+    color-mix(in oklab, var(--bg) var(--photo-scrim-hold), transparent) 42%,
+    color-mix(in oklab, var(--bg) var(--photo-scrim-mid), transparent) 54%,
+    color-mix(in oklab, var(--bg) var(--photo-scrim-far), transparent) 78%,
+    transparent 100%)`;
 
 // The fade is on the wrapper and the zoom on the image inside it. Both were on
 // the <img> to begin with and the cut never ran: Motion wrote the opening
@@ -111,7 +117,7 @@ const Hero = () => {
                         opacity={onSecondShot ? 1 : 0}
                     />
 
-                    <div className="absolute inset-0 hero-scrim" />
+                    <div className="absolute inset-0" style={{ background: HERO_SCRIM }} />
 
                     <div className="relative max-container padding-x flex h-screen items-center">
                         <div className="w-full max-w-lg">
