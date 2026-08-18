@@ -41,8 +41,8 @@
        would cost text contrast. */
     --photo-filter: brightness(1.18) saturate(1.06);
     --photo-scrim-hold: 96%;   /* opacity where text sits */
-    --photo-scrim-mid: 78%;    /* midpoint of the falloff */
-    --photo-scrim-far: 22%;    /* opacity at the far edge */
+    --photo-scrim-mid: 45%;    /* midpoint of the falloff */
+    --photo-scrim-far: 8%;     /* opacity at the far edge */
     /* Narrow screens, where the gradient below has no room to run and a flat
        scrim is used instead. It is NOT --photo-scrim-hold: holding the text
        value across the whole screen made the photograph disappear entirely on
@@ -104,8 +104,8 @@
        stop the exposed part reading as pale. */
     --photo-filter: contrast(1.1) saturate(1.14) brightness(0.94);
     --photo-scrim-hold: 97%;
-    --photo-scrim-mid: 62%;
-    --photo-scrim-far: 4%;
+    --photo-scrim-mid: 42%;
+    --photo-scrim-far: 0%;
     /* Light has far more headroom than dark here — near-black text over the
        same bright moss measures around 12:1 at this value — but it is kept in
        step so the two themes show the same amount of photograph. */
@@ -260,18 +260,47 @@
       color-mix(in oklab, var(--bg) var(--photo-scrim-hold), transparent)
         max(52rem, calc(50% + 80px)),
       color-mix(in oklab, var(--bg) var(--photo-scrim-mid), transparent)
-        max(66rem, calc(50% + 304px)),
+        max(56rem, calc(50% + 176px)),
       color-mix(in oklab, var(--bg) var(--photo-scrim-far), transparent) 100%
     );
   }
 
-  /* 52rem is where the gradient's first stop stops fitting on the screen, so
-     below it there is nothing to interpolate towards and every phone would
-     otherwise render the opening ramp alone — near-solid, with the photograph
-     effectively gone. A flat scrim at a value chosen to let the picture through
-     instead. One number, --photo-scrim-narrow, governs how much shows. */
+  /* The hero's own curve. It holds further across than the sections do, because
+     its headline is set at display size and runs wider than a body column, and
+     it opens faster afterwards so the droplet the camera pushes in on stands in
+     open picture rather than under a veil.
+
+     Lengths rather than percentages for the same reason as above, and the same
+     max() pair: the hero copy sits in the same container. It lived as an inline
+     style in Hero.jsx until 2026-08-18 and moved here to get a media query,
+     which an inline style cannot have. */
+  .hero-scrim {
+    background: linear-gradient(
+      100deg,
+      var(--bg) 0%,
+      color-mix(in oklab, var(--bg) var(--photo-scrim-hold), transparent)
+        max(38rem, calc(50% - 64px)),
+      color-mix(in oklab, var(--bg) var(--photo-scrim-mid), transparent)
+        max(48rem, calc(50% + 96px)),
+      color-mix(in oklab, var(--bg) var(--photo-scrim-far), transparent)
+        max(64rem, calc(50% + 352px)),
+      transparent 100%
+    );
+  }
+
+  /* 52rem is where the first length stop stops fitting on the screen, so below
+     it there is nothing left to interpolate towards and a phone would render
+     the opening ramp alone — near-solid, with the photograph effectively gone.
+     A flat scrim instead, at a value chosen to let the picture through. One
+     number, --photo-scrim-narrow, governs how much shows.
+
+     The hero takes the same rule. Its copy also runs the full width of a phone,
+     so its horizontal reveal has as little to reveal into as the sections' — it
+     just had percentage stops, which hid the problem by putting the falloff
+     somewhere arbitrary rather than somewhere wrong. */
   @media (width < 52rem) {
-    .photo-scrim {
+    .photo-scrim,
+    .hero-scrim {
       background: color-mix(in oklab, var(--bg) var(--photo-scrim-narrow), transparent);
     }
   }
