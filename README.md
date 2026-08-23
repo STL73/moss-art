@@ -1,9 +1,11 @@
 # Moss
 
-A storefront for a preserved-moss decoration business — five routes, a working cart, dual theme,
-and a catalogue that is deliberately not real yet.
+A storefront for **MossArt**, a preserved-moss decoration business — five routes, a working basket,
+dual theme, and a catalogue that is deliberately not real yet.
 
 **Live:** <https://mossart.spireforge.co.uk>
+
+![The MossArt home page in its dark theme](docs/screenshots/home-dark.jpg)
 
 ---
 
@@ -15,9 +17,11 @@ and a catalogue that is deliberately not real yet.
 > `orders` and `categories` are still placeholder routes.
 >
 > The catalogue copy and photography are placeholder on purpose — the business has not started
-> trading, so there is no real stock to photograph. The contact number is from the range Ofcom
-> reserves for fiction, and the page carries `noindex` so a shop that has not launched cannot be
-> indexed under a brand that has not launched either.
+> trading, so there is no real stock to photograph. **The site says so itself**, in a banner on
+> every page and again in the basket, and the checkout is deliberately disabled rather than
+> pretending to work. The contact number is from the range Ofcom reserves for fiction, and the page
+> carries `noindex` so a shop that has not launched cannot be indexed under a brand that has not
+> launched either.
 
 ---
 
@@ -26,6 +30,7 @@ and a catalogue that is deliberately not real yet.
 - [What is here](#what-is-here)
 - [Stack](#stack)
 - [The storefront](#the-storefront)
+- [Screenshots](#screenshots)
 - [The data seam](#the-data-seam)
 - [The API](#the-api)
 - [Running it](#running-it)
@@ -94,6 +99,30 @@ Bundle, gzipped, from a clean `npm run build`:
 | Per-route chunks | 0.33 – 1.88 kB |
 
 The budget is 150 kB.
+
+## Screenshots
+
+All taken from the live site.
+
+**Collection** — filter chips and sort both read from the URL, so any view here is a shareable link.
+
+![The collection page, showing category filters, a sort control and the product grid](docs/screenshots/products.jpg)
+
+**Product detail**
+
+![A product page for the Moss Wreath, showing price, description, quantity stepper and add-to-basket](docs/screenshots/product-detail.jpg)
+
+**Basket** — adding an item opens a drawer rather than navigating away, and the drawer repeats the
+not-trading notice rather than letting someone reach a checkout that cannot complete.
+
+![The basket drawer sliding over the product page with one item in it](docs/screenshots/basket-drawer.jpg)
+
+![The full basket page with a line item, a summary panel and a disabled checkout button](docs/screenshots/cart.jpg)
+
+**Light theme** — the toggle is applied before first paint, so a reload does not flash the wrong
+theme.
+
+![The same home page in its light theme](docs/screenshots/home-light.jpg)
 
 ## The data seam
 
