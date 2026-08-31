@@ -1,6 +1,6 @@
 // The Spireforge mark — three ascending chevrons, each 0.75 the size of the one
 // below it. Traced from the studio's own icon-only SVG
-// (Claude Cowork/OUTPUTS/MY-BRAND/01-LOGO-CORE/icon-*_2026-05-13_v1.svg), which
+// (Claude Cowork/OUTPUTS/my-brand/01-LOGO-CORE/icon-*_2026-05-13_v1.svg), which
 // keeps the coordinates identical to the brand asset.
 //
 // Drawn in currentColor rather than the brand's cyan and indigo. Those colours
