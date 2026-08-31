@@ -1,0 +1,21 @@
+{
+  // Runner options for markdownlint-cli2. Rules live in .markdownlint.jsonc.
+  //
+  // This file exists because neither of the two earlier attempts at ignoring
+  // node_modules worked. `ignores` inside .markdownlint.jsonc is a runner
+  // option and is silently discarded from a rules file. `.markdownlintignore`
+  // is the markdownlint **v1** mechanism and markdownlint-cli2 does not read
+  // it. The result: `markdownlint-cli2 "**/*.md"` reported 20,460 errors here,
+  // 20,334 of them inside node_modules, against 126 real ones.
+  //
+  // Added 2026-08-31. `.markdownlintignore` is now inert and can be deleted.
+
+  // Patterns are `**/`-prefixed so they match at any depth. This is a monorepo:
+  // node_modules lives at client/ and server/, not at the root, so a bare
+  // `node_modules/**` matched nothing and all 20,334 errors still came through.
+  "ignores": [
+    "**/node_modules/**",
+    "**/graphify-out/**",
+    "**/dist/**"
+  ]
+}
