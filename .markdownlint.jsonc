@@ -1,13 +1,38 @@
 {
-  // Project-level markdownlint config.
-  // Inherits all rules from the user's global config, then adds
-  // project-scoped `ignores` (paths relative to this file's location).
-  // The VS Code DavidAnson.vscode-markdownlint extension reads this
-  // file on every lint pass.
-  "extends": "C:/Users/slavi/.markdownlint.jsonc",
+  // Markdown lint RULES for this repo. Runner options live in
+  // .markdownlint-cli2.jsonc beside this file.
+  //
+  // Self-contained on purpose. This previously used `"extends"` pointing at an
+  // absolute path in the maintainer's home directory, which resolves for nobody
+  // who clones this repo — and an unresolvable extends does not degrade
+  // gracefully: markdownlint-cli2 throws ENOENT and lints nothing at all. Keep
+  // this in sync with the machine-global config by hand; it is short.
+  // Changed 2026-08-31.
 
-  "ignores": [
-    "graphify-out/**",
-    "node_modules/**"
-  ]
+  "default": true,
+
+  // Line length: not enforced. Prose wraps naturally, tables are wide, and long
+  // URLs break the rule without any benefit.
+  "MD013": false,
+
+  // Inline HTML: allowed. <details>, <br>, <kbd> earn their place in a README.
+  "MD033": false,
+
+  // Duplicate headings: only flag siblings at the same level.
+  "MD024": { "siblings_only": true },
+
+  // Trailing punctuation in headings: the default set minus "?", since
+  // question-style headings are a legitimate documentation pattern.
+  "MD026": { "punctuation": ".,;:!" },
+
+  // Blank line inside blockquote: off. Two adjacent callouts must be separated
+  // by a blank line, which this rule reads as one broken blockquote.
+  "MD028": false,
+
+  // First-line H1: agent and skill files use YAML frontmatter with a
+  // `description:` as their title rather than a `# Heading`.
+  "MD041": { "front_matter_title": "^\\s*(title|description)\\s*[:=]" }
+
+  // No `ignores` key here. `ignores` is a RUNNER option and is silently
+  // discarded from this file — it sat here doing nothing until 2026-08-31.
 }
