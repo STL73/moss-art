@@ -29,6 +29,13 @@
   // by a blank line, which this rule reads as one broken blockquote.
   "MD028": false,
 
+  // Table style: pinned to "compact" rather than inferred. Left to itself the
+  // rule guesses per document from the first table and can guess "aligned",
+  // a style --fix cannot produce, leaving errors that survive a fix run with
+  // no way to clear them. Added 2026-09-06, matching the vault and the other
+  // repos.
+  "MD060": { "style": "compact" },
+
   // First-line H1: agent and skill files use YAML frontmatter with a
   // `description:` as their title rather than a `# Heading`.
   "MD041": { "front_matter_title": "^\\s*(title|description)\\s*[:=]" }

@@ -6,7 +6,7 @@ contract exposed under `/api/v1`.
 ## Endpoints (current)
 
 | Prefix | Router file | Status |
-|---|---|---|
+| --- | --- | --- |
 | `/api/v1/auth` | `routes/auth.routes.js` (`sign-up`, `sign-in`, `sign-out`) | implemented |
 | `/api/v1/users` | `routes/users.routes.js` | `GET /`, `GET /:id` implemented; create/update/delete are stubs |
 | `/api/v1/orders` | `routes/orders.routes.js` | stub only — no controller |
