@@ -52,7 +52,7 @@ rolls back cleanly instead of leaving the schema half-changed, which MySQL canno
 **The thing people miss.** Postgres stopped being "the SQL one" a long time ago:
 
 | Want | Postgres feature | Replaces |
-|---|---|---|
+| --- | --- | --- |
 | Schemaless documents | `jsonb` + GIN indexes | MongoDB |
 | Embedding/vector search | `pgvector` | Pinecone, Qdrant, Chroma |
 | Geospatial | PostGIS | dedicated GIS stack |
@@ -121,7 +121,7 @@ foreign keys.
 ### Postgres vs MongoDB, head to head
 
 | | PostgreSQL | MongoDB |
-|---|---|---|
+| --- | --- | --- |
 | Data model | Tables, typed columns | BSON documents |
 | Schema enforcement | In the database, always | In the app (Mongoose), or opt-in validators |
 | Relationships | Foreign keys, real joins, `ON DELETE` behaviour | Manual refs, `$lookup`, no enforcement |
@@ -188,7 +188,7 @@ read-heavy edge site whose data changes rarely.
 Reach for these *alongside* a primary database, never instead of one.
 
 | Engine | Shape | Use it for | Do not use it for |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | **Redis / Valkey** | In-memory key-value | Sessions, caching, rate limits, queues, leaderboards | Anything you cannot afford to lose |
 | **ClickHouse** | Columnar OLAP | Analytics over hundreds of millions of rows, dashboards | Transactional writes, updates |
 | **DynamoDB** | Managed key-value / wide-column | Predictable single-digit-ms at any scale, AWS-native | Anything whose access patterns you can't design up front |
@@ -207,7 +207,7 @@ The engine is half the decision. Where it is hosted decides cost, cold-start beh
 it works from your runtime at all.
 
 | Platform | Engine | Free tier (Aug 2026) | The reason to pick it | Watch out |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | **Neon** | Postgres | 100 CU-hours/mo, 0.5 GB per project, up to 100 projects, 10 branches each | Scale-to-zero (suspends after ~5 min idle, storage-only billing) and **database branching** — a throwaway copy per PR. HTTP driver works from Workers | Cold start on first query after suspend. Owned by Databricks since May 2025 |
 | **Supabase** | Postgres | 500 MB DB, 1 GB storage, 5 GB egress, 50 K MAU, 2 active projects | Auth, storage, realtime and edge functions on top of plain Postgres. Fastest route to "logged-in users" without writing auth | **Projects pause after 7 days idle** on free — fatal for a portfolio link nobody clicks for a fortnight |
 | **MongoDB Atlas** | MongoDB | M0: 512 MB, ~100 ops/sec, 500 connections, free forever, 1 per project | The only sane way to run Mongo. No time limit | Data API removed 30 Sept 2025 — driver-only access now |
@@ -229,7 +229,7 @@ Choose **D1** if the whole thing already lives on Cloudflare and the data is sma
 ## Part 3 — The access layer (ORMs and query builders)
 
 | Tool | Style | Runtime cost | Best at | Worst at |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | **Prisma** | Schema-first DSL (`schema.prisma`) → generated client | ~1.6 MB / ~600 KB gzipped since v7 dropped the Rust engine | Migrations, DX, autocomplete, Prisma Studio. The most *teaching* option — it makes the relational model visible | Bundle size; the DSL is a second language; complex SQL fights the abstraction |
 | **Drizzle** | Schema in TypeScript, queries that look like SQL | ~12 KB, zero dependencies | Edge and serverless — Workers, Vercel Edge, Deno. Cold starts of 100–300 ms against Prisma's 500–1500 ms in constrained runtimes | Younger ecosystem; you are expected to know SQL |
 | **Kysely** | Pure typed query builder, no migrations opinion | Tiny | Type safety with zero magic; pairs well with hand-written migrations | Brings no migration story of its own |
@@ -253,7 +253,7 @@ Choose **D1** if the whole thing already lives on Cloudflare and the data is sma
 ## Part 4 — Which database for which type of project
 
 | Project type | Engine | Platform | Access layer | Why |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Static portfolio / brochure site | **none** | — | — | Adding a database is a downgrade: a build step becomes a runtime dependency that can be down |
 | Contact form on a static site | **none** | Form service, or Worker + D1/KV | — | The data is one row a week that you want emailed. Do not stand up Postgres for it |
 | E-commerce, any size | **Postgres** | Neon / Supabase | Drizzle (edge) or Prisma (Node) | Money, stock and orders are exactly what constraints and transactions are for |
@@ -490,7 +490,7 @@ job tracker, that is Postgres on Neon — but decide that when there is a client
 ## Part 6 — The short version
 
 | Project | Now | Should be | Effort |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | **Moss** | Mongoose + MongoDB, undeployed | **Postgres (Neon) + Drizzle**, API Worker | Days |
 | **CompProject** | MySQL, shared hosting | **MySQL** — but get credentials out of git and schema into it | Hours |
 | **WorldQuiz** | MySQL, local only | **MySQL** — write the two missing `CREATE TABLE`s | ~1 hour |

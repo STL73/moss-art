@@ -116,6 +116,6 @@ npm run test:watch
 ## Troubleshooting
 
 | Symptom | Fix |
-|---|---|
+| --- | --- |
 | `curl` poll loop times out | Check `/tmp/moss-client-dev.log` — usually port 5173 already in use from a previous unclosed session. Find and kill it: `netstat -ano \| grep ':5173' \| grep LISTENING`, then `Stop-Process -Id <pid> -Force`. |
 | `agent-browser` commands hang or error on a stale session | Run `agent-browser close --all` and re-`open`. |

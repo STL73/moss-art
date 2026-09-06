@@ -92,7 +92,7 @@ Five routes plus a 404: home, products, product detail, cart and contact.
 Bundle, gzipped, from a clean `npm run build`:
 
 | Chunk | Gzipped |
-|---|---|
+| --- | --- |
 | Main | 116.78 kB |
 | Vendor (`lib`) | 29.55 kB |
 | CSS | 7.98 kB |
@@ -108,7 +108,7 @@ All taken from the live site.
 
 ![The collection page, showing category filters, a sort control and the product grid](docs/screenshots/products.jpg)
 
-**Product detail**
+**Product detail** — price, description, a quantity stepper and add-to-basket on one page.
 
 ![A product page for the Moss Wreath, showing price, description, quantity stepper and add-to-basket](docs/screenshots/product-detail.jpg)
 
@@ -140,7 +140,7 @@ component changes, no test rewrites.
 Present and running locally, but only partly wired:
 
 | Resource | State |
-|---|---|
+| --- | --- |
 | `auth` | Real controller — `sign-up`, `sign-in`, `sign-out` |
 | `users` | Real controller for reads (`GET /` and `GET /:id`, the latter behind auth); create, update and delete are stubs |
 | `products` | Stub routes only |

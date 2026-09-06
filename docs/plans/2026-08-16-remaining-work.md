@@ -27,7 +27,7 @@ reachable in a production build, and deleted once the decisions are recorded.
 Six panels:
 
 | Panel | Compares |
-|---|---|
+| --- | --- |
 | Hero motion | Ken Burns as shipped (24s infinite) vs. paused off-screen vs. run-once vs. none |
 | Hero stats | The placeholder trio vs. claims that are actually true vs. no band at all |
 | Theme sweep | All five routes, light and dark, side by side in iframes |
@@ -195,7 +195,7 @@ undoes the whole change with no visible symptom.
 Measured on the products page, same scroll, real browser:
 
 | Device | Before | After |
-|---|---|---|
+| --- | --- | --- |
 | Desktop 1440, DPR 1 | 1582 kB | 310 kB |
 | Phone 390, DPR 3 | 1582 kB | 876 kB |
 
@@ -365,7 +365,7 @@ Step 5 done. Everything measured in a real browser before and after, because jsd
 and a class-name assertion would only prove the class is present, not that the target is 44px.
 
 | Control | Before | After | How |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Theme toggle, each half | 32 | 44 | `size-11`, and `SLOT` 18 → 24 so the two tap areas do not overlap |
 | Basket, menu, drawer close | 35 | 44 | `p-2` → `size-11 grid place-items-center` |
 | Drawer **Remove** | 16 | 44 | `min-h-11` with `-mx-2` absorbing the padding so the row does not shift |
