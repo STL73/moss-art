@@ -20,13 +20,14 @@ const Story = () => (
                     Grown slowly, <em className="text-accent italic">made by hand</em>
                 </h2>
                 <p className="mt-6 text-text-muted leading-relaxed max-w-[65ch] text-pretty">
-                    Every piece begins with moss gathered under licence from managed Nordic
-                    woodland, taken in small quantities so the ground recovers before we return.
+                    Every piece begins with preserved moss, sourced from specialist growers who
+                    harvest and treat it before it reaches the studio.
                 </p>
                 <p className="mt-4 text-text-muted leading-relaxed max-w-[65ch] text-pretty">
-                    In the studio it is cleaned and preserved with a plant-based glycerin
-                    solution. That halts ageing permanently, so the moss keeps its colour and
-                    softness for years with no water and no light.
+                    Preserved moss is treated with a plant-based glycerin solution, which halts
+                    ageing permanently, so it keeps its colour and softness for years with no
+                    water and no light. What happens here is the design and the making: every
+                    piece cut, arranged and mounted by hand.
                 </p>
                 <Link
                     to="/products"
